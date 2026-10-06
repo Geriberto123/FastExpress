@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastExpress - Cotizador de envios </title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main class="contenedor">
+        <h1> FastExpress</h1>
+        <p class="subtitulo"> Cotizador de envios </p>
+
+        <form id="form-cotizacion" novalidate>
+            <div class="campo">
+                <label for="peso">Peso del paquete (Kg) </label>
+                <input type="text" id="peso" name="peso" inputmode="decimal" placeholder="Ej: 7.5">
+                <span class="error" id="error-peso"></span>
+            </div>
+
+            <div class="campo">
+                <label for="tipoCliente">Tipo de cliente</label>
+                <select id="tipoCliente" name="tipoCliente">
+                    <option value="">Seleccione: </option>
+                    <option value="NUEVO">Nuevo</option>
+                    <option value="FRECUENTE">Frecuente</option>
+                    <option value="VIP">VIP</option>
+                </select>
+                <span class="error" id="error-tipoCliente"></span>
+            </div>
+
+            <div class="campo">
+                <label for="tipoEnvio">Tipo de envio</label>
+                <select id="tipoEnvio" name="tipoEnvio">
+                    <option value="">Seleccione: </option>
+                    <option value="ESTANDAR">Estandar</option>
+                    <option value="EXPRESS">Express</option>
+                </select>
+                <span class="error" id="error-tipoEnvio"></span>
+            </div>
+
+            <button type="submit" id="btn-cotizar">Cotizar</button>
+        </form>
+
+        <div id="mensaje-error" class="mensaje-error" hidden></div>
+        <p id="cargando" hidden>Cargando cotizacion...</p>
+
+        <section id="resultado" class="resultado" hidden>
+            <h2>Detalle de la cotizacion</h2>
+            <ul>
+                <li>Tarifa base: <span id="res-base"></span></li>
+                <li>Costo por peso: <span id="res-peso"></span></li>
+                <li>Descuento: <span id="res-descuento"></span></li>
+                <li>Recargo: <span id="res-recargo"></span></li>
+            </ul>
+            <p class="total">Total: <span id="res-total"></span></p>
+        </section>
+    </main>
+    <script src="js/validators.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
