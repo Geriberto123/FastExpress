@@ -1,5 +1,5 @@
-const USAR_MOCK = true; // Esta toca cambiarla a false cuando el backend esté listo
-const URL_API = "http://localhost:8000/api/cotizar"; // Ajustar a la URL de verdad cuanto se cree
+const USAR_MOCK = false; // Esta toca cambiarla a false cuando el backend esté listo
+const URL_API = "http://localhost:8000/api/cotizar"; 
 
 async function cotizarEnvio(datos) {
   return USAR_MOCK ? cotizarMock(datos) : cotizarReal(datos);
