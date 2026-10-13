@@ -1,0 +1,115 @@
+import {
+  TipoCliente,
+  TipoEnvio,
+} from '../../src/cotizacion/domain/reglas-tarifa';
+
+// Oráculo manual: subtotal USD 15 para 5 kg; USD 29 para 6 kg.
+// Los importes no se obtienen del código de producción.
+export const CASOS_DECISION = [
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.NUEVO,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 0,
+    recargo: 0,
+    total: 15,
+  },
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.NUEVO,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 0,
+    recargo: 3.75,
+    total: 18.75,
+  },
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.FRECUENTE,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 1.5,
+    recargo: 0,
+    total: 13.5,
+  },
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.FRECUENTE,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 1.5,
+    recargo: 3.75,
+    total: 17.25,
+  },
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.VIP,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 3,
+    recargo: 0,
+    total: 12,
+  },
+  {
+    peso: 5,
+    tipoCliente: TipoCliente.VIP,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 3,
+    recargo: 3.75,
+    total: 15.75,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.NUEVO,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 0,
+    recargo: 0,
+    total: 29,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.NUEVO,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 0,
+    recargo: 7.25,
+    total: 36.25,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.FRECUENTE,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 2.9,
+    recargo: 0,
+    total: 26.1,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.FRECUENTE,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 2.9,
+    recargo: 7.25,
+    total: 33.35,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.VIP,
+    tipoEnvio: TipoEnvio.ESTANDAR,
+    descuento: 5.8,
+    recargo: 0,
+    total: 23.2,
+  },
+  {
+    peso: 6,
+    tipoCliente: TipoCliente.VIP,
+    tipoEnvio: TipoEnvio.EXPRESS,
+    descuento: 5.8,
+    recargo: 7.25,
+    total: 30.45,
+  },
+] as const;
+
+export const CASOS_FRONTERA_VALIDOS = [
+  { peso: 0.01, costoPeso: 0.02, total: 5.02 },
+  { peso: 0.02, costoPeso: 0.04, total: 5.04 },
+  { peso: 4.99, costoPeso: 9.98, total: 14.98 },
+  { peso: 5, costoPeso: 10, total: 15 },
+  { peso: 5.01, costoPeso: 20.04, total: 25.04 },
+  { peso: 19.99, costoPeso: 79.96, total: 84.96 },
+  { peso: 20, costoPeso: 80, total: 85 },
+] as const;

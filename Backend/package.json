@@ -1,0 +1,57 @@
+{
+  "name": "fastexpress-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de cotización FastExpress para Calidad de Software",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.9 <25"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
+    "lint": "eslint . --max-warnings=0 && prettier --check .",
+    "format": "prettier --write .",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test:unit": "npm test -- --testPathIgnorePatterns=test/",
+    "test:e2e": "npm test -- --testPathPatterns=test/",
+    "test:cov": "npm test -- --coverage",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "overrides": {
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "^4.1.1"
+    }
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.3",
+    "@nestjs/core": "12.1.3",
+    "@nestjs/platform-express": "12.1.3",
+    "@nestjs/swagger": "12.0.2",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "decimal.js": "10.6.0",
+    "dotenv": "18.0.7",
+    "express": "5.3.0",
+    "helmet": "8.3.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@nestjs/testing": "12.1.3",
+    "@types/express": "5.0.6",
+    "@types/jest": "30.0.0",
+    "@types/node": "24.19.2",
+    "@types/supertest": "7.2.1",
+    "eslint": "10.12.0",
+    "jest": "30.5.2",
+    "prettier": "3.9.10",
+    "supertest": "7.3.1",
+    "ts-jest": "29.4.14",
+    "tsc-watch": "7.2.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2"
+  }
+}
