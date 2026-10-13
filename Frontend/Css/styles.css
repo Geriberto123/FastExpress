@@ -1,0 +1,146 @@
+* {
+  box-sizing: border-box;
+}
+ 
+body {
+  margin: 0;
+  padding: 24px 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f1f4f9;
+  color: #1f2937;
+}
+ 
+[hidden] {
+  display: none !important;
+}
+ 
+.contenedor {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 28px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+ 
+h1 {
+  margin: 0;
+  color: #16a34a; 
+  text-align: center;
+}
+ 
+.subtitulo {
+  margin: 4px 0 24px;
+  text-align: center;
+  color: #6b7280;
+}
+ 
+/* Formulario */
+.campo {
+  margin-bottom: 16px;
+}
+ 
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+ 
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+}
+ 
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #16a34a; 
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); 
+}
+ 
+.error {
+  display: block;
+  min-height: 18px;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #b91c1c;
+}
+ 
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #16a34a; 
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+ 
+button:hover {
+  background: #166534; 
+}
+ 
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+ 
+/* Estados */
+.mensaje-error {
+  margin-top: 20px;
+  padding: 12px;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+}
+ 
+#cargando {
+  margin-top: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+ 
+/* Resultado */
+.resultado {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f0fdf4; 
+  border: 1px solid #bbf7d0; 
+  border-radius: 8px;
+}
+ 
+.resultado h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+ 
+.resultado ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ 
+.resultado li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #dcfce7; 
+}
+ 
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #16a34a; 
+}
