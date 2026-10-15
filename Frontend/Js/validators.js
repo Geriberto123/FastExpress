@@ -16,9 +16,9 @@ function validarPeso(texto) {
         return { valido: false, mensaje: "El peso mínimo es 0.01 kg.", valor: null };
      }
      if (valor > PESO_MAX) {
-        return { valido: false, mensaje: "El peso máximo es 20 kg.", valor: null };
+        return { valido: false, mensaje: "Límite excedido: el peso máximo es 20 kg.", valor: null };
      }
-     return { valido: true, mensaje: "Peso válido.", valor };
+     return { valido: true, mensaje: "", valor };
 }
 function validarTipoCliente(valor) {
   if (!valor) {

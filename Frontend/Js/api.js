@@ -1,9 +1,8 @@
-const USAR_MOCK = false; // Esta toca cambiarla a false cuando el backend esté listo
 const URL_API = "http://localhost:8000/api/cotizar"; 
 
-async function cotizarEnvio(datos) {
-  return USAR_MOCK ? cotizarMock(datos) : cotizarReal(datos);
-}
+   async function cotizarEnvio(datos) {
+     return cotizarReal(datos);
+   }
 
 // El modo Real del negocio
 async function cotizarReal(datos) {
@@ -32,29 +31,4 @@ async function cotizarReal(datos) {
   }
 
   return respuesta.json();
-}
-
-// Mock Up para desarrollo, simula el backend para poder probar la interfaz simplemente.
-async function cotizarMock(datos) {
-  await new Promise((resolver) => setTimeout(resolver, 600)); // simula latencia
-
-  const { peso, tipoCliente, tipoEnvio } = datos;
-
-  if (peso > 20) {
-    throw new Error("Límite excedido: el peso máximo es 20 kg.");
-  }
-
-  const base = 5;
-  const costoPeso = peso <= 5 ? peso * 2 : peso * 4;
-  const subtotal = base + costoPeso;
-
-  const porcentajeDescuento = { NUEVO: 0, FRECUENTE: 0.1, VIP: 0.2 }[tipoCliente];
-  const descuento = subtotal * porcentajeDescuento;
-
-  const porcentajeRecargo = tipoEnvio === "EXPRESS" ? 0.25 : 0;
-  const recargo = (subtotal - descuento) * porcentajeRecargo;
-
-  const total = subtotal - descuento + recargo;
-
-  return { base, costoPeso, descuento, recargo, total };
 }
