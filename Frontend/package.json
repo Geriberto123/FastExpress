@@ -1,0 +1,11 @@
+{
+  "name": "fastexpress-frontend-qa",
+  "private": true,
+  "scripts": {
+    "test:unit": "node --test tests/unit/*.test.cjs",
+    "test:ui": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.57.0"
+  }
+}
