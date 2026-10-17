@@ -1,0 +1,33 @@
+
+> fastexpress-backend@1.0.0 test
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --coverage --coverageDirectory ../docs/evidencias/coverage --json --outputFile ../docs/evidencias/backend-jest.json
+
+------------------------------|---------|----------|---------|---------|-------------------
+File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------------------|---------|----------|---------|---------|-------------------
+All files                     |   98.48 |    96.96 |   95.83 |   98.38 |                   
+ src                          |      90 |       50 |   66.66 |   88.46 |                   
+  app.module.ts               |     100 |      100 |     100 |     100 |                   
+  health.controller.ts        |     100 |      100 |     100 |     100 |                   
+  main.ts                     |   82.35 |       50 |      50 |   82.35 | 18-20             
+ src/config                   |     100 |      100 |     100 |     100 |                   
+  configuracion.ts            |     100 |      100 |     100 |     100 |                   
+ src/cotizacion               |     100 |      100 |     100 |     100 |                   
+  cotizacion.module.ts        |     100 |      100 |     100 |     100 |                   
+ src/cotizacion/application   |     100 |      100 |     100 |     100 |                   
+  cotizar.service.ts          |     100 |      100 |     100 |     100 |                   
+ src/cotizacion/domain        |     100 |      100 |     100 |     100 |                   
+  calculador-tarifa.ts        |     100 |      100 |     100 |     100 |                   
+  cotizacion.ts               |     100 |      100 |     100 |     100 |                   
+  reglas-tarifa.ts            |     100 |      100 |     100 |     100 |                   
+  validar-entrada.ts          |     100 |      100 |     100 |     100 |                   
+ src/cotizacion/http          |     100 |      100 |     100 |     100 |                   
+  cotizacion-respuesta.dto.ts |     100 |      100 |     100 |     100 |                   
+  cotizacion.controller.ts    |     100 |      100 |     100 |     100 |                   
+  cotizar.dto.ts              |     100 |      100 |     100 |     100 |                   
+ src/http                     |     100 |    96.96 |     100 |     100 |                   
+  configurar-app.ts           |     100 |       50 |     100 |     100 | 35                
+  error-respuesta.dto.ts      |     100 |      100 |     100 |     100 |                   
+  http-error.filter.ts        |     100 |      100 |     100 |     100 |                   
+  json-seguro.ts              |     100 |      100 |     100 |     100 |                   
+------------------------------|---------|----------|---------|---------|-------------------

@@ -1,0 +1,8 @@
+{
+  "concurrentes": 50,
+  "exitosas": 50,
+  "errores5xx": 0,
+  "p50Ms": 31.74,
+  "p95Ms": 34.15,
+  "tiempoTotalMs": 65.38
+}
