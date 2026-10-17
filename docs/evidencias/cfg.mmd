@@ -1,0 +1,19 @@
+flowchart TD
+  n1[1 Inicio] --> n2{2 Peso finito}
+  n2 -- no --> n10[10 Error]
+  n2 -- sí --> n3{3 Máximo 2 decimales}
+  n3 -- no --> n10
+  n3 -- sí --> n4{4 Peso mínimo}
+  n4 -- no --> n10
+  n4 -- sí --> n5{5 Peso máximo}
+  n5 -- no --> n10
+  n5 -- sí --> n6{6 Cliente válido}
+  n6 -- no --> n10
+  n6 -- sí --> n7{7 Envío válido}
+  n7 -- no --> n10
+  n7 -- sí --> n8{8 Peso menor o igual a 5}
+  n8 -- sí --> n9a[9a Tarifa 2 por kg y cálculo]
+  n8 -- no --> n9b[9b Tarifa 4 por kg y cálculo]
+  n9a --> n11[11 Fin]
+  n9b --> n11
+  n10 --> n11

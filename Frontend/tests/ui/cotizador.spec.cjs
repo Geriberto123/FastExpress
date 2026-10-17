@@ -123,3 +123,15 @@ test('UI-08 contra backend real: BVA, decisión y redondeo', async ({ page }) =>
     await expect(page.locator('#res-total')).toHaveText(`$${total}`);
   }
 });
+
+test('UI-09 carga los recursos locales sin respuestas 4xx ni 5xx', async ({ page }) => {
+  const errores = [];
+  page.on('response', respuesta => {
+    const url = new URL(respuesta.url());
+    if (url.host === 'localhost:5501' && respuesta.status() >= 400) {
+      errores.push(`${respuesta.status()} ${url.pathname}`);
+    }
+  });
+  await page.goto('/', { waitUntil: 'networkidle' });
+  expect(errores).toEqual([]);
+});
