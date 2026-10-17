@@ -54,4 +54,4 @@ npm run test:cov
 
 El reporte generado se abre en `coverage/index.html`. Se exige 85 % de líneas y ramas global y 100 % del calculador. GitHub Actions ejecuta las verificaciones y conserva la cobertura como artefacto. `coverage/` está ignorado por Git y se regenera con `npm run test:cov`.
 
-El frontend debe activar su conexión real a la API y usar un origen permitido por CORS. Su mock actual calcula EXPRESS después del descuento; debe alinearse con el subtotal original del backend.
+El frontend envía sus cotizaciones a esta API desde `http://localhost:5500` o `http://127.0.0.1:5500` de forma predeterminada. Configura `CORS_ORIGINS` si lo sirves desde otro origen.
