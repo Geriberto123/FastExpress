@@ -104,6 +104,14 @@ title.add_run("Informe de QA FastExpress")
 subtitle = doc.add_paragraph()
 subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
 subtitle.add_run("Cotización de envíos y descuentos").italic = True
+for linea in (
+    "Curso: Calidad de Software",
+    "Equipo: Adolfo Andres Cera Urueta, Juan Esteban Ordoñez Tobon, Samuel David Morales Rios",
+    "Repositorio: https://github.com/Geriberto123/FastExpress.git",
+):
+    meta = doc.add_paragraph()
+    meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    meta.add_run(linea).font.size = Pt(9)
 doc.add_paragraph()
 
 p = doc.add_paragraph()

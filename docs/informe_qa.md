@@ -3,14 +3,14 @@
 > **Curso:** Calidad de Software<br>
 > **Proyecto:** FastExpress<br>
 > **Fecha:** 17 de octubre de 2026<br>
-> **Equipo:** [COMPLETAR: nombres del equipo]<br>
-> **Repositorio:** [COMPLETAR: URL de GitHub]
+> **Equipo:** Adolfo Andres Cera Urueta, Juan Esteban Ordoñez Tobon, Samuel David Morales Rios <br>
+> **Repositorio:** https://github.com/Geriberto123/FastExpress.git
 
 | Rol | Integrante |
 | --- | --- |
-| Desarrollador Backend | [COMPLETAR: nombre] |
-| Desarrollador Frontend | [COMPLETAR: nombre] |
-| Analista QA | [COMPLETAR: nombre] |
+| Desarrollador Backend | Adolfo Andres Cera Urueta|
+| Desarrollador Frontend | Juan Esteban Ordoñez Tobon|
+| Analista QA | Samuel David Morales Rios |
 
 ## 1. Introducción, alcance y objetivos
 
@@ -198,5 +198,3 @@ cd Backend && npm run build && PORT=8001 npm start
 cd .. && FASTEXPRESS_URL=http://127.0.0.1:8001/api/cotizar CONCURRENCY=50 node tests/performance/cotizacion-local.mjs
 # Si se instala Pandoc: pandoc docs/informe_qa.md -o docs/Informe_QA_FastExpress.docx
 ```
-
-Pandoc no está instalado en este entorno; el comando anterior es el requerido para convertir el Markdown, fuente de verdad. Pendientes de completar: equipo, tres nombres de roles y URL de GitHub.
