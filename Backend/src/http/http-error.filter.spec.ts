@@ -67,7 +67,7 @@ describe('HttpErrorFilter', () => {
 
   it.each(['Peso inválido.', ['Peso inválido.', 'Cliente inválido.']])(
     'normaliza message=%j de NestJS',
-    (message: any) => {
+    (message: string | string[]) => {
       const respuesta = responder(new HttpException({ message }, 400));
       const errores = Array.isArray(message) ? message : [message];
       expect(respuesta.json).toHaveBeenCalledWith({
@@ -97,7 +97,7 @@ describe('HttpErrorFilter', () => {
       type: 'entity.too.large',
       status: 413,
     }),
-  ])('normaliza errores del parser: %j', (error: any) => {
+  ])('normaliza errores del parser: %j', (error) => {
     const respuesta = responder(error);
     expect(respuesta.status).toHaveBeenCalledWith(error.status);
     expect(respuesta.json).toHaveBeenCalledWith({
@@ -124,7 +124,7 @@ describe('HttpErrorFilter', () => {
       status: 400,
     }),
     Object.assign(new Error('SECRETO'), { type: 'desconocido', status: 400 }),
-  ])('oculta errores inesperados %j y registra la causa', (error: any) => {
+  ])('oculta errores inesperados %j y registra la causa', (error) => {
     const respuesta = responder(error);
     expect(respuesta.status).toHaveBeenCalledWith(500);
     expect(respuesta.json).toHaveBeenCalledWith({

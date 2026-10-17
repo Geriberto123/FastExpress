@@ -26,7 +26,7 @@ describe('validarEntrada (invariantes del dominio)', () => {
     [{ tipoCliente: '__proto__' }, 'cliente'],
     [{ tipoCliente: 'vip' }, 'cliente'],
     [{ tipoEnvio: 'URGENTE' }, 'envío'],
-  ])('rechaza %j con mensaje %s', (cambio: any, mensaje: any) => {
+  ])('rechaza %j con mensaje %s', (cambio, mensaje) => {
     const entrada = { ...valida, ...cambio } as unknown as EntradaCotizacion;
     expect(() => validarEntrada(entrada)).toThrow(CotizacionInvalidaError);
     expect(() => validarEntrada(entrada)).toThrow(mensaje);

@@ -12,7 +12,7 @@ describe('CalculadorTarifaDecimal', () => {
 
   it.each(CASOS_DECISION)(
     'peso=$peso cliente=$tipoCliente envío=$tipoEnvio → USD $total',
-    ({ peso, tipoCliente, tipoEnvio, descuento, recargo, total }: Record<string, any>) => {
+    ({ peso, tipoCliente, tipoEnvio, descuento, recargo, total }) => {
       const resultado = calculador.calcular({ peso, tipoCliente, tipoEnvio });
       expect(resultado.base.toFixed(2)).toBe('5.00');
       expect(resultado.descuento.equals(descuento)).toBe(true);
@@ -31,7 +31,7 @@ describe('CalculadorTarifaDecimal', () => {
 
   it.each(CASOS_FRONTERA_VALIDOS)(
     'frontera válida: $peso kg',
-    ({ peso, costoPeso, total }: Record<string, any>) => {
+    ({ peso, costoPeso, total }) => {
       const resultado = calculador.calcular({
         peso,
         tipoCliente: TipoCliente.NUEVO,
@@ -42,15 +42,18 @@ describe('CalculadorTarifaDecimal', () => {
     },
   );
 
-  it.each([0, -1, 20.01])('rechaza la frontera inválida %s kg', (peso: any) => {
-    expect(() =>
-      calculador.calcular({
-        peso,
-        tipoCliente: TipoCliente.NUEVO,
-        tipoEnvio: TipoEnvio.ESTANDAR,
-      }),
-    ).toThrow(CotizacionInvalidaError);
-  });
+  it.each([0, -1, 20.01])(
+    'rechaza la frontera inválida %s kg',
+    (peso: number) => {
+      expect(() =>
+        calculador.calcular({
+          peso,
+          tipoCliente: TipoCliente.NUEVO,
+          tipoEnvio: TipoEnvio.ESTANDAR,
+        }),
+      ).toThrow(CotizacionInvalidaError);
+    },
+  );
 
   it.each([
     {
@@ -85,7 +88,7 @@ describe('CalculadorTarifaDecimal', () => {
       recargo: '6.26',
       total: '26.29',
     },
-  ])('redondea cada importe: $peso/$tipoCliente/$tipoEnvio', (caso: any) => {
+  ])('redondea cada importe: $peso/$tipoCliente/$tipoEnvio', (caso) => {
     const resultado = calculador.calcular(caso);
     expect(resultado.descuento.toFixed(2)).toBe(caso.descuento);
     expect(resultado.recargo.toFixed(2)).toBe(caso.recargo);
@@ -134,7 +137,7 @@ describe('CalculadorTarifaDecimal', () => {
     },
   ])(
     'verifica límite de monto $total para $peso/$tipoCliente/$tipoEnvio',
-    (caso: any) => {
+    (caso) => {
       expect(calculador.calcular(caso).total.toFixed(2)).toBe(caso.total);
     },
   );
