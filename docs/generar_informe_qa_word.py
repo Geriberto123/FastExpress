@@ -108,12 +108,12 @@ doc.add_paragraph()
 
 p = doc.add_paragraph()
 p.add_run("Resultado ejecutivo. ").bold = True
-p.add_run("La funcionalidad de cotización quedó verificada con evidencia automatizada: 168 pruebas de backend, 3 pruebas unitarias de validadores y 10 pruebas de interfaz superaron la ejecución final. Se corrigieron rutas de recursos del frontend y se añadieron pruebas de caja negra, interfaz real y rendimiento local.")
+p.add_run("La funcionalidad de cotización quedó verificada con evidencia automatizada: 177 pruebas de backend, 3 pruebas unitarias de validadores y 11 pruebas de interfaz superaron la ejecución final. Se corrigieron rutas de recursos del frontend y se añadieron pruebas de caja negra, interfaz real y rendimiento local.")
 
 add_table(doc, ["Indicador", "Resultado", "Evidencia"], [
-    ["Backend", "168 de 168 pruebas correctas", "docs/evidencias/backend-test.txt"],
+    ["Backend", "177 de 177 pruebas correctas", "docs/evidencias/backend-test.txt"],
     ["Validadores frontend", "3 de 3 correctas", "docs/evidencias/frontend-unit.txt"],
-    ["Interfaz Playwright", "10 de 10 correctas", "docs/evidencias/frontend-ui.txt"],
+    ["Interfaz Playwright", "11 de 11 correctas", "docs/evidencias/frontend-ui.txt"],
     ["Cobertura", "98.38 % líneas  |  96.96 % ramas", "docs/evidencias/coverage"],
     ["Carga local", "50 de 50 correctas  |  p95 34.15 ms", "docs/evidencias/performance.txt"],
 ], [1.35, 2.2, 2.9])
@@ -167,16 +167,38 @@ add_table(doc, ["Área", "Líneas", "Ramas", "Funciones", "Sentencias"], [
 ], [1.8, 1.1, 1.1, 1.1, 1.2])
 doc.add_paragraph("No se excluyó Swagger de la medición. La rama pendiente del reporte corresponde a configuración interna de Swagger, y permanece visible en la evidencia de cobertura.")
 
-heading(doc, "6 Rendimiento local")
+heading(doc, "6 Caja blanca algoritmo de cálculo")
+doc.add_paragraph("El grafo de flujo de control del cálculo incorpora las seis validaciones de entrada y la decisión de tramo. Los errores convergen en un único nodo Fin.")
+add_table(doc, ["Nodo", "Flujo de control"], [
+    ["1", "Inicio"],
+    ["2 a 7", "Peso finito, máximo dos decimales, mínimo, máximo, cliente válido y envío válido"],
+    ["8", "Decisión de tarifa: peso menor o igual a 5 kg"],
+    ["9", "Calcular base, costo por peso, descuento, recargo y total"],
+    ["10", "Error de validación"],
+    ["11", "Fin único"],
+], [1.0, 5.0])
+doc.add_paragraph("Complejidad ciclomática: N = 11 nodos; E = 17 aristas. V(G) = E − N + 2 = 17 − 11 + 2 = 8. El resultado también coincide con decisiones + 1: siete decisiones reales más una unidad. El valor 7 corresponde solamente al validador aislado; el algoritmo completo añade la selección de tramo.")
+add_table(doc, ["Camino", "Entrada", "Resultado obtenido", "Evidencia"], [
+    ["P1", "NaN", "Error por peso no finito", "validarEntrada"],
+    ["P2", "0.001 kg", "Error por formato", "CP-112"],
+    ["P3", "0 kg", "Error por mínimo", "CP-109"],
+    ["P4", "20.01 kg", "Error por límite", "CP-110"],
+    ["P5", "Cliente o envío inválido", "Error de enumeración", "API inválidos"],
+    ["P6", "5.00 kg NUEVO ESTANDAR", "$15.00 primer tramo", "CP-104"],
+    ["P7", "5.01 kg NUEVO ESTANDAR", "$25.04 segundo tramo", "CP-105"],
+    ["P8", "0.03 kg NUEVO EXPRESS", "$6.33 half-up", "CP-207"],
+], [0.65, 2.1, 2.25, 1.0])
+
+heading(doc, "7 Rendimiento local")
 doc.add_paragraph("Se creó un script Node sin dependencias adicionales que usa fetch y Promise.all para ejecutar 50 cotizaciones concurrentes. En la ejecución local: 50 solicitudes exitosas, 0 errores 5xx, p50 de 31.74 ms, p95 de 34.15 ms y tiempo total de 65.38 ms. El resultado cumple el criterio local definido, pero no sustituye una prueba de carga distribuida.")
 
-heading(doc, "7 Conclusiones y pendientes")
+heading(doc, "8 Conclusiones y pendientes")
 doc.add_paragraph("Las reglas de negocio, los límites de peso, la tabla de decisión, el redondeo, la API y la interfaz quedaron verificados con evidencia. La cobertura supera el umbral acordado y el benchmark local no detectó errores bajo 50 solicitudes simultáneas.")
 bullet(doc, "Decidir si los valores cero deben conservar el signo en pantalla.")
 bullet(doc, "Ejecutar k6 o Locust contra un entorno desplegado para medir carga representativa.")
 bullet(doc, "Aceptar explícitamente el salto comercial de $10.04 entre 5.00 y 5.01 kg.")
 
-heading(doc, "8 Evidencias y ejecución")
+heading(doc, "9 Evidencias y ejecución")
 doc.add_paragraph("Las evidencias se conservan en docs/evidencias. Para reproducir: ejecutar las pruebas de Backend con cobertura, las pruebas unitarias y Playwright de Frontend, y luego iniciar Backend en el puerto 8001 para correr tests/performance/cotizacion-local.mjs con 50 solicitudes concurrentes.")
 
 doc.save(OUT)
