@@ -141,4 +141,27 @@ describe('CalculadorTarifaDecimal', () => {
       expect(calculador.calcular(caso).total.toFixed(2)).toBe(caso.total);
     },
   );
+
+  it.each([
+    ['CP-306', '4.01'],
+    ['CP-307', '106.26'],
+  ])(
+    '%s demuestra que el total %s no es alcanzable con entradas válidas',
+    (_id, totalNoAlcanzable) => {
+      const totales = new Set<string>();
+      for (let centesimas = 1; centesimas <= 2000; centesimas += 1) {
+        const peso = centesimas / 100;
+        for (const tipoCliente of Object.values(TipoCliente)) {
+          for (const tipoEnvio of Object.values(TipoEnvio)) {
+            totales.add(
+              calculador
+                .calcular({ peso, tipoCliente, tipoEnvio })
+                .total.toFixed(2),
+            );
+          }
+        }
+      }
+      expect(totales).not.toContain(totalNoAlcanzable);
+    },
+  );
 });

@@ -73,4 +73,40 @@ describe('CP caja negra trazable', () => {
       .expect(200);
     expect(respuesta.body).toMatchObject({ recargo: 1.27, total: 6.33 });
   });
+
+  it.each([
+    [
+      'CP-208',
+      { peso: 2, tipoCliente: 'INVALIDO', tipoEnvio: 'ESTANDAR' },
+      'Tipo de cliente no válido.',
+    ],
+    [
+      'CP-209',
+      { peso: 2, tipoCliente: 'NUEVO', tipoEnvio: 'INVALIDO' },
+      'Tipo de envío no válido.',
+    ],
+  ])('%s rechaza decisión inválida', async (_id, datos, mensaje) => {
+    const respuesta = await request(app.getHttpServer())
+      .post('/api/cotizar')
+      .send(datos)
+      .expect(400);
+    expect(respuesta.body.errores).toContain(mensaje);
+  });
+
+  it.each([
+    ['CP-301', 0.01, 'VIP', 'ESTANDAR', 4.02],
+    ['CP-302', 0.02, 'VIP', 'ESTANDAR', 4.03],
+    ['CP-303', 0.01, 'NUEVO', 'ESTANDAR', 5.02],
+    ['CP-304', 20, 'NUEVO', 'ESTANDAR', 85],
+    ['CP-305', 20, 'NUEVO', 'EXPRESS', 106.25],
+  ])(
+    '%s BVA de monto total cotizado',
+    async (_id, peso, tipoCliente, tipoEnvio, total) => {
+      const respuesta = await request(app.getHttpServer())
+        .post('/api/cotizar')
+        .send({ peso, tipoCliente, tipoEnvio })
+        .expect(200);
+      expect(respuesta.body.total).toBe(total);
+    },
+  );
 });
