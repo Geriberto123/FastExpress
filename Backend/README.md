@@ -4,17 +4,24 @@ API de cotización de envíos con NestJS, TypeScript y Express. Requiere **Node.
 
 ## Ejecutar
 
-Desde `Backend/`:
+Requiere Node.js 24.9 o posterior dentro de la versión 24 y npm. Instala las dependencias desde `Backend/`:
 
 ```bash
 npm ci
-cp .env.example .env
-npm run start:dev
 ```
 
-Para ejecutar el código compilado: `npm run build` y luego `npm start`.
+Para trabajar localmente con el frontend, desde `Backend/` ejecuta:
 
-Variables opcionales: `PORT` (predeterminado: `8000`) y `CORS_ORIGINS` (predeterminado: `http://localhost:5500,http://127.0.0.1:5500`). Los orígenes se separan por comas, sin rutas ni comodines.
+```bash
+npm run build
+CORS_ORIGINS=http://127.0.0.1:5501,http://localhost:5501 PORT=8000 npm start
+```
+
+La API queda disponible en `http://localhost:8000`; comprueba que está activa en `http://localhost:8000/api/health`. En otra terminal, inicia el frontend con `cd Frontend && node scripts/static-server.cjs` y abre `http://127.0.0.1:5501`.
+
+También puedes iniciar el backend en modo desarrollo con `CORS_ORIGINS=http://127.0.0.1:5501,http://localhost:5501 npm run start:dev`. Para usarlo sin el frontend, `npm run start:dev` utiliza los valores predeterminados.
+
+Variables opcionales: `PORT` (predeterminado: `8000`) y `CORS_ORIGINS` (predeterminado: `http://localhost:5500,http://127.0.0.1:5500`). Los orígenes se separan por comas, sin rutas ni comodines. `localhost` y `127.0.0.1` son orígenes distintos; permite el origen exacto desde el que abriste el frontend. Para detener el servidor, usa `Ctrl+C` en su terminal.
 
 ## API
 
@@ -42,7 +49,9 @@ Base USD 5; tarifa USD 2/kg hasta 5 kg y USD 4/kg entre 5.01 y 20 kg, aplicada a
 
 Errores: 400 para entradas inválidas, 413 para JSON mayor a 16 KiB, 500 para fallos internos. Contrato: `{ statusCode, mensaje, errores }`.
 
-## Verificaciones
+## Verificaciones y QA
+
+Desde `Backend/`:
 
 ```bash
 npm run lint
@@ -54,4 +63,4 @@ npm run test:cov
 
 El reporte generado se abre en `coverage/index.html`. Se exige 85 % de líneas y ramas global y 100 % del calculador. GitHub Actions ejecuta las verificaciones y conserva la cobertura como artefacto. `coverage/` está ignorado por Git y se regenera con `npm run test:cov`.
 
-El frontend envía sus cotizaciones a esta API desde `http://localhost:5500` o `http://127.0.0.1:5500` de forma predeterminada. Configura `CORS_ORIGINS` si lo sirves desde otro origen.
+Para ejecutar las pruebas del frontend, instala sus dependencias con `cd ../Frontend && npm ci`; la primera vez instala Chromium con `npx playwright install chromium`. Luego ejecuta `npm run test:unit` y `npm run test:ui` desde `Frontend/`. Las pruebas de interfaz levantan automáticamente sus propios servidores en los puertos 5501 y 8000, así que detén los servidores manuales antes de iniciarlas para evitar `EADDRINUSE`.
