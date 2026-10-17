@@ -2,9 +2,9 @@
 > test:unit
 > node --test tests/unit/*.test.cjs
 
-✔ CP-001 acepta punto, coma y espacios como el mismo peso (0.898958ms)
-✔ CP-002 rechaza los formatos no admitidos (0.089916ms)
-✔ CP-003 da prioridad al formato para 20.001 (0.052459ms)
+✔ CP-001 acepta punto, coma y espacios como el mismo peso (0.846958ms)
+✔ CP-002 rechaza los formatos no admitidos (0.096209ms)
+✔ CP-003 da prioridad al formato para 20.001 (0.059125ms)
 ℹ tests 3
 ℹ suites 0
 ℹ pass 3
@@ -12,4 +12,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 47.312917
+ℹ duration_ms 46.346292

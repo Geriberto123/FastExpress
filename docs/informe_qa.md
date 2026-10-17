@@ -1,5 +1,17 @@
 # Informe de QA — FastExpress
 
+> **Curso:** Calidad de Software<br>
+> **Proyecto:** FastExpress<br>
+> **Fecha:** 17 de octubre de 2026<br>
+> **Equipo:** [COMPLETAR: nombres del equipo]<br>
+> **Repositorio:** [COMPLETAR: URL de GitHub]
+
+| Rol | Integrante |
+| --- | --- |
+| Desarrollador Backend | [COMPLETAR: nombre] |
+| Desarrollador Frontend | [COMPLETAR: nombre] |
+| Analista QA | [COMPLETAR: nombre] |
+
 ## 1. Introducción, alcance y objetivos
 
 Se evaluó el cotizador contra BR-01 a BR-04: cálculo, validación, API, interfaz, cobertura y carga local. La ejecución final verificable es Jest **168/168**, Node Test **3/3**, Playwright **10/10**, y benchmark local de 50 solicitudes correctas. Las salidas están en `docs/evidencias/`.
@@ -15,6 +27,24 @@ Backend: NestJS 12, TypeScript, Jest/Supertest y decimal.js. Frontend: HTML/CSS/
 - Redondeo decimal half-up por importe: 0.03 kg/NUEVO/EXPRESS resulta subtotal $5.06, recargo $1.27 y total **$6.33**.
 - `20.001` es formato inválido antes que exceso de límite en UI. Coma, punto y espacios externos son equivalentes; miles/mezclas, `5,`, `,`, `--5`, exponencial y >2 decimales son inválidos.
 - Entrada: dependencias, compilación y oráculo disponibles. Salida: sin fallos, líneas y ramas >=85 %, evidencia guardada y defectos trazables.
+
+### Cronograma y orden real de trabajo
+
+El historial real está en `docs/evidencias/git-log.txt`. La implementación del backend fue registrada el 12 de octubre de 2026 (`1f40df3`), mientras que la primera matriz/suite explícita de caja negra fue registrada el 16 de octubre (`f5e0cb6` y `c57ec8f`). Por lo tanto, **la matriz de caja negra no fue escrita antes del código**; es una desviación del orden recomendado y se documenta sin alterar fechas. La interfaz inicial apareció el 5–12 de octubre y la consolidación QA/cobertura el 16 de octubre.
+
+### Trazabilidad
+
+| Alcance | IDs | Archivo de prueba/evidencia |
+| --- | --- | --- |
+| BR-01 tarifa base y BR-02 tramos | CP-101–108, CP-301–305 | `Backend/test/qa-blackbox.e2e.spec.ts` |
+| BR-03 descuentos y BR-04 recargo | CP-201–207 | `Backend/test/qa-blackbox.e2e.spec.ts` |
+| EP y BVA | CP-001–003, CP-101–112, CP-301–307 | `Frontend/tests/unit/validators.test.cjs`, backend QA/unitarias |
+| Decisión | CP-201–209 | `Backend/test/qa-blackbox.e2e.spec.ts` |
+| Caja blanca | P1–P8 | `validar-entrada.spec.ts`, `calculador-tarifa.spec.ts` |
+| Funcional/API | CP-101–305 | `Backend/test/*.e2e.spec.ts` |
+| Interfaz | UI-01–09 | `Frontend/tests/ui/cotizador.spec.cjs` |
+| Rendimiento | PF-001 | `tests/performance/cotizacion-local.mjs` |
+| Cobertura | — | `docs/evidencias/coverage/coverage-summary.json` |
 
 ## 4. Caja negra: EP, BVA y decisión
 
@@ -45,6 +75,18 @@ Backend: NestJS 12, TypeScript, Jest/Supertest y decimal.js. Frontend: HTML/CSS/
 
 No existe campo monto. La BVA de monto se cubre por 5.00/5.01/20.00 (CP-104, CP-105, CP-108): $15.00, $25.04 y $85.00.
 
+Monto se define como **total cotizado**. La partición alcanzable observada va de $4.02 a $106.25. Los valores $4.01 y $106.26 no son alcanzables con entradas válidas: CP-306 y CP-307 lo demuestran exhaustivamente para pesos de 0.01 a 20.00 y todas las combinaciones permitidas.
+
+| BVA monto total | Datos de entrada | Total esperado | ID |
+| --- | --- | ---: | --- |
+| Mínimo alcanzable | VIP, 0.01 kg, ESTANDAR | 4.02 | CP-301 |
+| Vecino superior | VIP, 0.02 kg, ESTANDAR | 4.03 | CP-302 |
+| Referencia NUEVO | NUEVO, 0.01 kg, ESTANDAR | 5.02 | CP-303 |
+| Máximo ESTANDAR | NUEVO, 20.00 kg, ESTANDAR | 85.00 | CP-304 |
+| Máximo alcanzable | NUEVO, 20.00 kg, EXPRESS | 106.25 | CP-305 |
+| No alcanzable inferior | entradas válidas | 4.01 no aparece | CP-306 |
+| No alcanzable superior | entradas válidas | 106.26 no aparece | CP-307 |
+
 | Cliente | Envío | Descuento | Recargo | Total 2.00 kg | ID |
 | --- | --- | ---: | ---: | ---: | --- |
 | NUEVO | ESTANDAR | 0.00 | 0.00 | 9.00 | CP-201 |
@@ -53,6 +95,8 @@ No existe campo monto. La BVA de monto se cubre por 5.00/5.01/20.00 (CP-104, CP-
 | FRECUENTE | EXPRESS | 0.90 | 2.25 | **10.35** | CP-204 |
 | VIP | ESTANDAR | 1.80 | 0.00 | 7.20 | CP-205 |
 | VIP | EXPRESS | 1.80 | 2.25 | **9.45** | CP-206 |
+| INVÁLIDO | ESTANDAR | — | — | HTTP 400, cliente no válido | CP-208 |
+| NUEVO | INVÁLIDO | — | — | HTTP 400, envío no válido | CP-209 |
 
 CP-207 confirma 0.03/NUEVO/EXPRESS = **6.33**. CP-101–207 se ejecutan en `Backend/test/qa-blackbox.e2e.spec.ts`; CP-001–003 en `Frontend/tests/unit/validators.test.cjs`.
 
@@ -75,24 +119,27 @@ flowchart TD
  n6--sí-->n7{7 envío válido}
  n7--no-->n10
  n7--sí-->n8{8 peso <=5}
- n8--sí-->n9[9 calcular base, peso, descuento, recargo y total]
- n8--no-->n9
- n9-->n11[11 Fin]
+ n8--sí-->n9a[9a tarifa 2 por kg y cálculo]
+ n8--no-->n9b[9b tarifa 4 por kg y cálculo]
+ n9a-->n11[11 Fin]
+ n9b-->n11
  n10-->n11
 ```
 
-N=11. E=17: 1 inicial + 12 de seis validaciones + 2 de tramo + cálculo→Fin + Error→Fin. V(G)=E−N+2=17−11+2=**8**; también 7 decisiones+1. V(G)=7 solo describe `validarEntrada` aislada (seis decisiones); el cálculo completo agrega el tramo. No se fuerza un valor contrario al código real.
+N=12 nodos (1–8, 9a, 9b, 10 y 11). E=18: 1 inicial + 12 de las seis validaciones + 2 del tramo + 2 de tarifa hacia Fin + 1 de Error hacia Fin. V(G)=E−N+2=18−12+2=**8**; también 7 decisiones+1. El PNG generado es `docs/evidencias/cfg.png` y su fuente Mermaid es `docs/evidencias/cfg.mmd`.
 
 | Camino | Nodos | Entrada / esperado / obtenido | Prueba |
 | --- | --- | --- | --- |
-| P1 | 1-2-10-11 | NaN → error / error | validarEntrada no finito |
-| P2 | 1-2-3-10-11 | 0.001 → error / error | CP-112 |
-| P3 | 1-2-3-4-10-11 | 0 → error / error | CP-109 |
-| P4 | 1-2-3-4-5-10-11 | 20.01 → error / error | CP-110 |
-| P5 | 1-…-6-10-11 | cliente inválido → error / error | API inválidos |
-| P6 | 1-…-7-10-11 | envío inválido → error / error | API inválidos |
-| P7 | 1-…-8-9-11 | 5.00/NUEVO/ESTANDAR → 15.00 / 15.00 | CP-104 |
-| P8 | 1-…-8-9-11 | 5.01/NUEVO/ESTANDAR → 25.04 / 25.04 | CP-105 |
+| P1 | 1-2-10-11 | NaN → error / error | unitaria `validarEntrada` |
+| P2 | 1-2-3-10-11 | 0.001 → formato inválido / 400 | CP-112 |
+| P3 | 1-2-3-4-10-11 | 0 → mínimo / 400 | CP-109 |
+| P4 | 1-2-3-4-5-10-11 | 20.01 → máximo / 400 | CP-110 |
+| P5 | 1-…-6-10-11 | cliente inválido → 400 / 400 | CP-208 |
+| P6 | 1-…-7-10-11 | envío inválido → 400 / 400 | CP-209 |
+| P7 | 1-…-8-9a-11 | 5.00/NUEVO/ESTANDAR → 15.00 / 15.00 | CP-104 |
+| P8 | 1-…-8-9b-11 | 5.01/NUEVO/ESTANDAR → 25.04 / 25.04 | CP-105 |
+
+CP-207 (0.03 kg, NUEVO/EXPRESS → 6.33) es una prueba de datos sobre P7, no un camino independiente nuevo.
 
 ## 6. Unitarias, funcionales, interfaz y rendimiento
 
@@ -104,7 +151,7 @@ N=11. E=17: 1 inicial + 12 de seis validaciones + 2 de tramo + cálculo→Fin + 
 | `cotizador.spec.cjs` | UI-01–08 | requisitos UI | 10/10; UI-08 contra backend real. |
 | `validators.test.cjs` | CP-001–003 | reglas/mensajes UI | 3/3. |
 
-Jest agrupa unidad (dominio/HTTP/config), caja blanca (rutas de validación/cálculo), funcional (API) y caja negra (CP-001–207); su JSON enumera 168 casos. Playwright informa 10 UI y Node Test 3 CP.
+Jest agrupa unidad (dominio/HTTP/config), caja blanca (rutas de validación/cálculo), funcional (API) y caja negra (CP-001–307); su JSON enumera 177 casos. Playwright informa 11 UI y Node Test 3 CP. La trazabilidad concreta está en la tabla de la sección 3.
 
 PF-001 (`tests/performance/cotizacion-local.mjs`) usa `fetch` y `Promise.all` sin dependencias: 50 concurrentes, 50 exitosas, 0 errores 5xx, p50 31.74 ms, p95 34.15 ms, total 65.38 ms. Criterio local: p95 <500 ms y 0 errores 5xx; cumple. Es benchmark local. k6/Locust no estaban instalados; se recomiendan en entorno desplegado.
 
@@ -122,19 +169,21 @@ PF-001 (`tests/performance/cotizacion-local.mjs`) usa `fetch` y `Promise.all` si
 | `src/cotizacion/http` | 100 | 100 | 100 | 100 |
 | `src/http` | 100 | 96.96 | 100 | 100 |
 
-No se excluyó Swagger. La rama pendiente es `configurar-app.ts:35`, configuración interna de Swagger; se informa, no se oculta.
+`src` agrupa `app.module.ts`, `health.controller.ts` y `main.ts`. Sus líneas/ramas/funciones no cubiertas corresponden al bloque de terminación de `main.ts` cuando arranca como proceso principal y a la rama de bootstrap; el reporte HTML lo muestra. El 96.96 % de ramas total coincide con `src/http` **por casualidad**: el total proviene de todos los archivos y `src/http` tiene una rama pendiente distinta, en `configurar-app.ts:35` (Swagger). No se excluyó Swagger. La captura de evidencia es `docs/evidencias/cobertura.png`.
+
+![Cobertura](evidencias/cobertura.png)
 
 ## 8. Ciclo de defectos y observaciones
 
 | ID | Estado | Registro y evidencia |
 | --- | --- | --- |
-| BUG-001 | Hallazgo corregido; reproducción histórica no demostrable | Rutas `css/js` frente a directorios `Css/Js` corregidas. No hay salida previa que capture el fallo en FS sensible a mayúsculas: no se afirma reproducción ni severidad basada en evidencia. UI final confirma carga, no fallo anterior. |
+| BUG-001 | Cerrado | **Módulo:** carga de recursos Frontend. **Pasos:** rama `repro/bug-001` desde `00e4ff2`, servir en modo sensible a mayúsculas y cargar la página. **Esperado:** ningún recurso 4xx/5xx. **Obtenido:** 404 en `/css/styles.css` y tres `/js/*.js`. **Severidad:** alta, porque la aplicación no carga estilo ni lógica en Linux sensible a mayúsculas. **Falla:** `docs/evidencias/bug-001-repro.txt`. **Verificación:** UI-09 verde en `frontend-ui.txt`. |
 | OBS-002 | Pendiente producto | UI-03 afirma valor numérico `0.00`, no el signo. La presentación actual `-$0.00`/`+$0.00` es observación, no defecto confirmado. |
 | OBS-001 | Cerrada | `git diff` confirma que solo cambiaron tipos/inferencia de `any`; ninguna expectativa ni aserción cambió. Lint y typecheck correctos. |
 
 ## 9. Conclusiones, riesgos y pendientes
 
-Con evidencia se verificaron BR-01–04, BVA, decisión, half-up, validación, contrato, UI y benchmark local. Pendiente: decisión de producto sobre signo de cero y carga real con k6/Locust desplegado. El salto de tramo es riesgo comercial, no fallo de implementación.
+**Verificado con evidencia:** BR-01–04, EP/BVA, decisión, half-up, API, UI-01–09, cobertura y benchmark local. **Pendiente:** decisión sobre signo en cero; aceptación comercial del salto de $10.04 de 5.00 a 5.01 kg; carga con k6/Locust en entorno desplegado; y confirmación del profesor de que Monto debe interpretarse como total cotizado.
 
 ## 10. Cómo ejecutar
 
@@ -147,4 +196,7 @@ cd Frontend && npm run test:unit && npm run test:ui
 cd Backend && npm run build && PORT=8001 npm start
 # en otra terminal:
 cd .. && FASTEXPRESS_URL=http://127.0.0.1:8001/api/cotizar CONCURRENCY=50 node tests/performance/cotizacion-local.mjs
+# Si se instala Pandoc: pandoc docs/informe_qa.md -o docs/Informe_QA_FastExpress.docx
 ```
+
+Pandoc no está instalado en este entorno; el comando anterior es el requerido para convertir el Markdown, fuente de verdad. Pendientes de completar: equipo, tres nombres de roles y URL de GitHub.

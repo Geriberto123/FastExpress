@@ -1,0 +1,14 @@
+2de6154 2026-10-16 Document default frontend API origins and CORS configuration
+f6de93d 2026-10-16 docs: trazabilidad y cobertura
+c57ec8f 2026-10-16 docs: caja negra en tablas
+c5adb6f 2026-10-16 docs: ciclo de defectos
+e0b94a6 2026-10-16 test: interfaz y trazabilidad UI
+f5e0cb6 2026-10-16 test: rendimiento local
+00e4ff2 2026-10-15 Mock de Api eliminado.
+c09fb6d 2026-10-12 habilitar conexión con el backend y corregir tipado en pruebas
+1f40df3 2026-10-12 feat: implementa cotizador backend con NestJS y pruebas
+405e45b 2026-10-12 App.js y primera version de Css.
+5e531f9 2026-10-06 Validators.js y mock up de Api creados.
+ba18ea0 2026-10-05 Index.html primera iteracion creada.
+01e8700 2026-10-01 Carpetas Iniciales
+a76b42b 2026-10-01 Initial commit

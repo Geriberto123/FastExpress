@@ -4,20 +4,21 @@
 
 
 
-Running 10 tests using 1 worker
+Running 11 tests using 1 worker
 
 
 
 
 
-[1A[2K[1/10] tests/ui/cotizador.spec.cjs:10:1 › UI-01 carga únicamente el formulario
-[1A[2K[2/10] tests/ui/cotizador.spec.cjs:18:1 › UI-02 muestra los tres errores al cotizar vacío
-[1A[2K[3/10] tests/ui/cotizador.spec.cjs:26:1 › UI-03 presenta los importes numéricos en cero
-[1A[2K[4/10] tests/ui/cotizador.spec.cjs:34:1 › UI-04 oculta un resultado previo mientras inicia una nueva cotización
-[1A[2K[5/10] tests/ui/cotizador.spec.cjs:56:1 › UI-05 doble clic genera una sola petición
-[1A[2K[6/10] tests/ui/cotizador.spec.cjs:72:1 › UI-06 comunica que el backend no está disponible
-[1A[2K[7/10] tests/ui/cotizador.spec.cjs:79:1 › UI-07 no desborda horizontalmente a 375 px
-[1A[2K[8/10] tests/ui/cotizador.spec.cjs:85:1 › UI-08 acepta coma y muestra el total de la API
-[1A[2K[9/10] tests/ui/cotizador.spec.cjs:92:1 › UI-08 reproduce BVA y tabla de decisión devueltas por la API
-[1A[2K[10/10] tests/ui/cotizador.spec.cjs:114:1 › UI-08 contra backend real: BVA, decisión y redondeo
-[1A[2K  10 passed (8.4s)
+[1A[2K[1/11] tests/ui/cotizador.spec.cjs:10:1 › UI-01 carga únicamente el formulario
+[1A[2K[2/11] tests/ui/cotizador.spec.cjs:18:1 › UI-02 muestra los tres errores al cotizar vacío
+[1A[2K[3/11] tests/ui/cotizador.spec.cjs:26:1 › UI-03 presenta los importes numéricos en cero
+[1A[2K[4/11] tests/ui/cotizador.spec.cjs:34:1 › UI-04 oculta un resultado previo mientras inicia una nueva cotización
+[1A[2K[5/11] tests/ui/cotizador.spec.cjs:56:1 › UI-05 doble clic genera una sola petición
+[1A[2K[6/11] tests/ui/cotizador.spec.cjs:72:1 › UI-06 comunica que el backend no está disponible
+[1A[2K[7/11] tests/ui/cotizador.spec.cjs:79:1 › UI-07 no desborda horizontalmente a 375 px
+[1A[2K[8/11] tests/ui/cotizador.spec.cjs:85:1 › UI-08 acepta coma y muestra el total de la API
+[1A[2K[9/11] tests/ui/cotizador.spec.cjs:92:1 › UI-08 reproduce BVA y tabla de decisión devueltas por la API
+[1A[2K[10/11] tests/ui/cotizador.spec.cjs:114:1 › UI-08 contra backend real: BVA, decisión y redondeo
+[1A[2K[11/11] tests/ui/cotizador.spec.cjs:127:1 › UI-09 carga los recursos locales sin respuestas 4xx ni 5xx
+[1A[2K  11 passed (8.8s)
