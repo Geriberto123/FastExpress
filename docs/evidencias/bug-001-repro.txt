@@ -1,0 +1,5 @@
+UI-09 reproducción BUG-001 en servidor sensible a mayúsculas
+404 /css/styles.css
+404 /js/validators.js
+404 /js/api.js
+404 /js/app.js
