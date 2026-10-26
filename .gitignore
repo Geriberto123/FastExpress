@@ -141,3 +141,14 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+
+# Archivos del sistema macOS
+.DS_Store
+
+# Resultados temporales de pruebas
+Frontend/test-results/.last-run.json
+
+# Archivos temporales de Microsoft Word
+~$*.docx
+
