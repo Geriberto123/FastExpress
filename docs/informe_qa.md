@@ -14,7 +14,7 @@
 
 ## 1. Introducción, alcance y objetivos
 
-Se evaluó el cotizador contra BR-01 a BR-04: cálculo, validación, API, interfaz, cobertura y carga local. La ejecución final verificable es Jest **168/168**, Node Test **3/3**, Playwright **10/10**, y benchmark local de 50 solicitudes correctas. Las salidas están en `docs/evidencias/`.
+Se evaluó el cotizador contra BR-01 a BR-04: cálculo, validación, API, interfaz, cobertura y carga local. La ejecución final de la base `7b98b16` es Jest **177/177**, Node Test **3/3**, Playwright **11/11**, y benchmark local de 50 solicitudes correctas. Las salidas están en `docs/evidencias/`.
 
 ## 2. Stack y arquitectura de pruebas
 
@@ -38,7 +38,7 @@ El historial real está en `docs/evidencias/git-log.txt`. La implementación del
 | --- | --- | --- |
 | BR-01 tarifa base y BR-02 tramos | CP-101–108, CP-301–305 | `Backend/test/qa-blackbox.e2e.spec.ts` |
 | BR-03 descuentos y BR-04 recargo | CP-201–207 | `Backend/test/qa-blackbox.e2e.spec.ts` |
-| EP y BVA | CP-001–003, CP-101–112, CP-301–307 | `Frontend/tests/unit/validators.test.cjs`, backend QA/unitarias |
+| EP y BVA | CP-001–003, CP-101–112, CP-301–307, UI-02 | `Frontend/tests/unit/validators.test.cjs`, backend QA/unitarias |
 | Decisión | CP-201–209 | `Backend/test/qa-blackbox.e2e.spec.ts` |
 | Caja blanca | P1–P8 | `validar-entrada.spec.ts`, `calculador-tarifa.spec.ts` |
 | Funcional/API | CP-101–305 | `Backend/test/*.e2e.spec.ts` |
@@ -50,13 +50,13 @@ El historial real está en `docs/evidencias/git-log.txt`. La implementación del
 
 | Clase EP de peso | Ejemplos | Esperado | IDs |
 | --- | --- | --- | --- |
-| Vacío | `''` | “El peso es obligatorio.” | CP-001 |
-| No numérico | `abc`, `5kg`, `1e3` | formato inválido | CP-002 |
-| <= 0 | `0`, `0.00`, `-1` | mínimo 0.01 kg | CP-109 |
+| Vacío | `''` | “El peso es obligatorio.” | UI-02 |
+| No numérico/formato inválido | `abc`, `5kg`, `1e3`, `5,` | formato inválido | CP-002 |
+| <= 0 | `0`, `0.00` | mínimo 0.01 kg | CP-109 |
 | 0.01–5.00 | `0.01`, `4.99`, `5.00` | tramo $2/kg | CP-101–104 |
 | 5.01–20.00 | `5.01`, `5.02`, `19.99`, `20.00` | tramo $4/kg | CP-105–108 |
 | >20 | `20.01` | límite máximo 20 kg | CP-110 |
-| Formato inválido | `20.001`, `0.001`, `5,`, `,`, `--5` | formato inválido | CP-002, CP-003, CP-111–112 |
+| Formato inválido | `20.001`, `0.001`, `5,`, `,`, `--5`, `-1` en UI | formato inválido | CP-002, CP-003, CP-111–112 |
 
 | Entrada | Esperado en UI | Total NUEVO/ESTANDAR | ID |
 | --- | --- | ---: | --- |
@@ -126,18 +126,18 @@ flowchart TD
  n10-->n11
 ```
 
-N=12 nodos (1–8, 9a, 9b, 10 y 11). E=18: 1 inicial + 12 de las seis validaciones + 2 del tramo + 2 de tarifa hacia Fin + 1 de Error hacia Fin. V(G)=E−N+2=18−12+2=**8**; también 7 decisiones+1. El PNG generado es `docs/evidencias/cfg.png` y su fuente Mermaid es `docs/evidencias/cfg.mmd`.
+Este es un CFG **expandido**: combina `validarEntrada` (V(G)=7) y la decisión de tramo de `CalculadorTarifaDecimal.calcular` (V(G)=2); esos valores aislados no se suman. N=12 nodos (1–8, 9a, 9b, 10 y 11). E=18: 1 inicial + 12 de las seis validaciones + 2 del tramo + 2 de tarifa hacia Fin + 1 de Error hacia Fin. V(G)=E−N+2=18−12+2=**8**; también 7 decisiones+1. El PNG generado es `docs/evidencias/cfg.png` y su fuente Mermaid es `docs/evidencias/cfg.mmd`.
 
 | Camino | Nodos | Entrada / esperado / obtenido | Prueba |
 | --- | --- | --- | --- |
 | P1 | 1-2-10-11 | NaN → error / error | unitaria `validarEntrada` |
-| P2 | 1-2-3-10-11 | 0.001 → formato inválido / 400 | CP-112 |
-| P3 | 1-2-3-4-10-11 | 0 → mínimo / 400 | CP-109 |
-| P4 | 1-2-3-4-5-10-11 | 20.01 → máximo / 400 | CP-110 |
-| P5 | 1-…-6-10-11 | cliente inválido → 400 / 400 | CP-208 |
-| P6 | 1-…-7-10-11 | envío inválido → 400 / 400 | CP-209 |
-| P7 | 1-…-8-9a-11 | 5.00/NUEVO/ESTANDAR → 15.00 / 15.00 | CP-104 |
-| P8 | 1-…-8-9b-11 | 5.01/NUEVO/ESTANDAR → 25.04 / 25.04 | CP-105 |
+| P2 | 1-2-3-10-11 | 0.001 → error de precisión / error | unitaria `validarEntrada` |
+| P3 | 1-2-3-4-10-11 | 0 → mínimo / error | unitaria `validarEntrada` |
+| P4 | 1-2-3-4-5-10-11 | 20.01 → máximo / error | unitaria `validarEntrada` |
+| P5 | 1-…-6-10-11 | cliente inválido → error / error | unitaria `validarEntrada` |
+| P6 | 1-…-7-10-11 | envío inválido → error / error | unitaria `validarEntrada` |
+| P7 | 1-…-8-9a-11 | 5.00/NUEVO/ESTANDAR → 15.00 / 15.00 | unitaria `calculador-tarifa` |
+| P8 | 1-…-8-9b-11 | 5.01/NUEVO/ESTANDAR → 25.04 / 25.04 | unitaria `calculador-tarifa` |
 
 CP-207 (0.03 kg, NUEVO/EXPRESS → 6.33) es una prueba de datos sobre P7, no un camino independiente nuevo.
 
@@ -148,7 +148,7 @@ CP-207 (0.03 kg, NUEVO/EXPRESS → 6.33) es una prueba de datos sobre P7, no un 
 | `calculador-tarifa.spec.ts` | BR-01–04, matriz, tramos, redondeo | fixtures con oráculo manual | Independiente del calculador; límites y combinaciones. |
 | `validar-entrada.spec.ts` | mínimo, máximo, precisión, enums | requisitos | Clases inválidas del dominio. |
 | `qa-blackbox.e2e.spec.ts` | CP-101–207, BR-01–04 | tablas de sección 4 | Añadido: API, BVA, decisión, half-up. |
-| `cotizador.spec.cjs` | UI-01–08 | requisitos UI | 10/10; UI-08 contra backend real. |
+| `cotizador.spec.cjs` | UI-01–09; UI-08a, UI-08b y UI-08c | requisitos UI | 11/11; UI-08a valida coma, UI-08b usa respuesta interceptada y UI-08c usa backend real. |
 | `validators.test.cjs` | CP-001–003 | reglas/mensajes UI | 3/3. |
 
 Jest agrupa unidad (dominio/HTTP/config), caja blanca (rutas de validación/cálculo), funcional (API) y caja negra (CP-001–307); su JSON enumera 177 casos. Playwright informa 11 UI y Node Test 3 CP. La trazabilidad concreta está en la tabla de la sección 3.
@@ -169,7 +169,7 @@ PF-001 (`tests/performance/cotizacion-local.mjs`) usa `fetch` y `Promise.all` si
 | `src/cotizacion/http` | 100 | 100 | 100 | 100 |
 | `src/http` | 100 | 96.96 | 100 | 100 |
 
-`src` agrupa `app.module.ts`, `health.controller.ts` y `main.ts`. Sus líneas/ramas/funciones no cubiertas corresponden al bloque de terminación de `main.ts` cuando arranca como proceso principal y a la rama de bootstrap; el reporte HTML lo muestra. El 96.96 % de ramas total coincide con `src/http` **por casualidad**: el total proviene de todos los archivos y `src/http` tiene una rama pendiente distinta, en `configurar-app.ts:35` (Swagger). No se excluyó Swagger. La captura de evidencia es `docs/evidencias/cobertura.png`.
+`src` agrupa `app.module.ts`, `health.controller.ts` y `main.ts`. Sus líneas/ramas/funciones no cubiertas corresponden al bloque de terminación de `main.ts` cuando arranca como proceso principal y a la rama de bootstrap; el reporte HTML lo muestra. El 96.96 % de ramas total coincide con `src/http` **por casualidad**: el total proviene de todos los archivos y `src/http` tiene una rama pendiente distinta, en `configurar-app.ts:35`, la alternativa de `error.constraints ?? {}` dentro de la fábrica de errores de validación. No corresponde a Swagger. No se excluyó Swagger. La captura de evidencia es `docs/evidencias/cobertura.png`.
 
 ![Cobertura](evidencias/cobertura.png)
 
