@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import type { EntradaCotizacion } from './cotizacion';
 import { TipoCliente, TipoEnvio } from './reglas-tarifa';
 import { CotizacionInvalidaError, validarEntrada } from './validar-entrada';

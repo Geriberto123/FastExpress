@@ -7,13 +7,9 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { isHttpError } from 'http-errors';
 import { CotizacionInvalidaError } from '../cotizacion/domain/validar-entrada';
 import type { ErrorRespuestaDto } from './error-respuesta.dto';
-
-interface ErrorTransporte extends Error {
-  status?: number;
-  type?: string;
-}
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
@@ -21,7 +17,8 @@ export class HttpErrorFilter implements ExceptionFilter {
 
   catch(excepcion: unknown, host: ArgumentsHost): void {
     const respuesta = host.switchToHttp().getResponse<Response>();
-    respuesta.status(this.statusDe(excepcion)).json(this.cuerpoDe(excepcion));
+    const cuerpo = this.cuerpoDe(excepcion);
+    respuesta.status(cuerpo.statusCode).json(cuerpo);
   }
 
   private statusDe(excepcion: unknown): number {
@@ -31,8 +28,8 @@ export class HttpErrorFilter implements ExceptionFilter {
     if (excepcion instanceof HttpException) {
       return excepcion.getStatus();
     }
-    if (this.esErrorDeTransporte(excepcion)) {
-      return excepcion.status!;
+    if (isHttpError(excepcion)) {
+      return excepcion.statusCode;
     }
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
@@ -81,25 +78,18 @@ export class HttpErrorFilter implements ExceptionFilter {
         errores: [],
       };
     }
+    if (statusCode === HttpStatus.UNSUPPORTED_MEDIA_TYPE) {
+      return {
+        statusCode,
+        mensaje:
+          'La codificación o el charset del cuerpo JSON no está admitido.',
+        errores: [],
+      };
+    }
     return {
       statusCode,
       mensaje: 'El cuerpo de la solicitud no contiene JSON válido.',
       errores: [],
     };
-  }
-
-  private esErrorDeTransporte(
-    excepcion: unknown,
-  ): excepcion is ErrorTransporte {
-    if (!(excepcion instanceof Error)) {
-      return false;
-    }
-    const error = excepcion as ErrorTransporte;
-    return (
-      (error.type === 'entity.parse.failed' &&
-        error.status === HttpStatus.BAD_REQUEST) ||
-      (error.type === 'entity.too.large' &&
-        error.status === HttpStatus.PAYLOAD_TOO_LARGE)
-    );
   }
 }

@@ -1,14 +1,23 @@
 import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from '@jest/globals';
+import {
   ArgumentsHost,
   BadRequestException,
   HttpException,
   Logger,
 } from '@nestjs/common';
+import createHttpError from 'http-errors';
 import { CotizacionInvalidaError } from '../cotizacion/domain/validar-entrada';
 import { HttpErrorFilter } from './http-error.filter';
 
 describe('HttpErrorFilter', () => {
-  let registrarError: jest.SpyInstance;
+  let registrarError: jest.Spied<Logger['error']>;
 
   beforeEach(() => {
     registrarError = jest
@@ -65,18 +74,18 @@ describe('HttpErrorFilter', () => {
     });
   });
 
-  it.each(['Peso inválido.', ['Peso inválido.', 'Cliente inválido.']])(
-    'normaliza message=%j de NestJS',
-    (message: string | string[]) => {
-      const respuesta = responder(new HttpException({ message }, 400));
-      const errores = Array.isArray(message) ? message : [message];
-      expect(respuesta.json).toHaveBeenCalledWith({
-        statusCode: 400,
-        mensaje: errores.join(' '),
-        errores,
-      });
-    },
-  );
+  it.each([
+    { message: 'Peso inválido.' },
+    { message: ['Peso inválido.', 'Cliente inválido.'] },
+  ])('normaliza message=$message de NestJS', ({ message }) => {
+    const respuesta = responder(new HttpException({ message }, 400));
+    const errores = Array.isArray(message) ? message : [message];
+    expect(respuesta.json).toHaveBeenCalledWith({
+      statusCode: 400,
+      mensaje: errores.join(' '),
+      errores,
+    });
+  });
 
   it('usa el mensaje de la excepción cuando falta el detalle', () => {
     const excepcion = new HttpException({}, 404);
@@ -89,13 +98,20 @@ describe('HttpErrorFilter', () => {
   });
 
   it.each([
-    Object.assign(new SyntaxError('Contenido privado.'), {
+    createHttpError(400, 'Contenido privado.', {
       type: 'entity.parse.failed',
-      status: 400,
     }),
-    Object.assign(new Error('Contenido privado.'), {
+    createHttpError(413, 'Contenido privado.', {
       type: 'entity.too.large',
-      status: 413,
+    }),
+    createHttpError(415, 'Contenido privado.', {
+      type: 'charset.unsupported',
+    }),
+    createHttpError(415, 'Contenido privado.', {
+      type: 'encoding.unsupported',
+    }),
+    createHttpError(400, 'Contenido privado.', {
+      code: 'Z_DATA_ERROR',
     }),
   ])('normaliza errores del parser: %j', (error) => {
     const respuesta = responder(error);
@@ -108,11 +124,13 @@ describe('HttpErrorFilter', () => {
     expect(JSON.stringify(respuesta.json.mock.calls)).not.toContain(
       'Contenido privado',
     );
+    expect(registrarError).not.toHaveBeenCalled();
   });
 
   it.each([
     new Error('SECRETO'),
     new HttpException('SECRETO', 500),
+    createHttpError(500, 'SECRETO'),
     null,
     { status: 400, message: 'SECRETO' },
     Object.assign(new Error('SECRETO'), {

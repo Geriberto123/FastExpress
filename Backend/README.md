@@ -47,7 +47,9 @@ Peso: número entre 0.01 y 20 kg, máximo dos decimales. Clientes: `NUEVO`, `FRE
 
 Base USD 5; tarifa USD 2/kg hasta 5 kg y USD 4/kg entre 5.01 y 20 kg, aplicada al peso completo. Descuentos 0/10/20 % y recargo EXPRESS 25 % sobre el subtotal original. Cada ajuste se redondea a centavos con mitades hacia arriba.
 
-Errores: 400 para entradas inválidas, 413 para JSON mayor a 16 KiB, 500 para fallos internos. Contrato: `{ statusCode, mensaje, errores }`.
+Errores: 400 para entradas inválidas, JSON malformado o compresión corrupta; 413 para JSON mayor a 16 KiB; 415 para charset o codificación de contenido no admitidos; 500 para fallos internos. Contrato: `{ statusCode, mensaje, errores }`. Las respuestas de error conservan las cabeceras CORS para los orígenes permitidos.
+
+El límite de 16 KiB también se aplica al tamaño del JSON descomprimido. Los errores del parser usan mensajes controlados y no devuelven fragmentos del cuerpo recibido.
 
 ## Verificaciones y QA
 
@@ -62,5 +64,7 @@ npm run test:cov
 ```
 
 El reporte generado se abre en `coverage/index.html`. Se exige 85 % de líneas y ramas global y 100 % del calculador. GitHub Actions ejecuta las verificaciones y conserva la cobertura como artefacto. `coverage/` está ignorado por Git y se regenera con `npm run test:cov`.
+
+Las pruebas importan `describe`, `it`, `expect` y los hooks desde `@jest/globals`, declarado como dependencia de desarrollo. `tsconfig.json` limita los tipos globales a Node; las pruebas no dependen de que el editor detecte automáticamente los globals de Jest. Si el editor conserva diagnósticos anteriores después de instalar dependencias, reinicia su servidor de TypeScript.
 
 Para ejecutar las pruebas del frontend, instala sus dependencias con `cd ../Frontend && npm ci`; la primera vez instala Chromium con `npx playwright install chromium`. Luego ejecuta `npm run test:unit` y `npm run test:ui` desde `Frontend/`. Las pruebas de interfaz levantan automáticamente sus propios servidores en los puertos 5501 y 8000, así que detén los servidores manuales antes de iniciarlas para evitar `EADDRINUSE`.

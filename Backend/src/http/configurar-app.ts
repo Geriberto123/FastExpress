@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import type { Configuracion } from '../config/configuracion';
 import { HttpErrorFilter } from './http-error.filter';
 import { rechazarClavesReservadas } from './json-seguro';
+import { normalizarErrorJson } from './normalizar-error-json';
 
 export function configurarApp(
   app: INestApplication,
@@ -16,12 +17,13 @@ export function configurarApp(
 ): void {
   app.setGlobalPrefix('api');
   app.use(helmet());
-  app.use(json({ limit: '16kb', reviver: rechazarClavesReservadas }));
   app.enableCors({
     origin: [...config.origenesCors],
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: false,
   });
+  app.use(json({ limit: '16kb', reviver: rechazarClavesReservadas }));
+  app.use(normalizarErrorJson);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

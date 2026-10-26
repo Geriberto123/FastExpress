@@ -4,7 +4,9 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiPayloadTooLargeResponse,
   ApiTags,
+  ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
 import { CotizarService } from '../application/cotizar.service';
 import { ErrorRespuestaDto } from '../../http/error-respuesta.dto';
@@ -21,6 +23,8 @@ export class CotizacionController {
   @ApiOperation({ summary: 'Cotizar un envío en USD sin persistirlo' })
   @ApiOkResponse({ type: CotizacionRespuestaDto })
   @ApiBadRequestResponse({ type: ErrorRespuestaDto })
+  @ApiPayloadTooLargeResponse({ type: ErrorRespuestaDto })
+  @ApiUnsupportedMediaTypeResponse({ type: ErrorRespuestaDto })
   @ApiInternalServerErrorResponse({ type: ErrorRespuestaDto })
   cotizar(@Body() entrada: CotizarDto): CotizacionRespuestaDto {
     return CotizacionRespuestaDto.desde(this.servicio.cotizar(entrada));
