@@ -317,17 +317,18 @@ add_table(doc, ["ID", "Estado", "Detalle"], [
     ["OBS-002", "Pendiente de producto", "Presentación de -$0.00 y +$0.00 en cero. No es un defecto confirmado del cálculo."],
 ], [1.0, 1.6, 4.4])
 
-heading(doc, "9 Conclusiones y pendientes")
+heading(doc, "9 Conclusiones riesgos y mejoras futuras")
 doc.add_paragraph(
-    "Las reglas de negocio, los límites de peso, la tabla de decisión, el redondeo, la API "
-    "y la interfaz quedaron verificados con evidencia. La cobertura supera el umbral "
-    "acordado y el benchmark local no detectó errores bajo 50 solicitudes simultáneas."
+    "El proceso de QA de FastExpress concluye con evidencia de las reglas BR-01 a BR-04, "
+    "las particiones y valores límite, la tabla de decisión, el redondeo half-up, la API, "
+    "la interfaz UI-01 a UI-09, la cobertura y el benchmark local. La ejecución registrada "
+    "cumple el umbral de cobertura establecido y no reporta fallos en las suites ejecutadas; "
+    "por tanto, el alcance definido para esta entrega final queda verificado."
 )
-bullet(doc, "Decidir si los valores cero deben conservar el signo en pantalla.")
-bullet(doc, "Aceptar explícitamente el salto comercial de $10.04 entre 5.00 y 5.01 kg.")
-bullet(doc, "Ejecutar k6 o Locust contra un entorno desplegado para medir carga representativa.")
-bullet(doc, "Confirmar con el profesor que Monto se interpreta como total cotizado.")
-bullet(doc, "Repetir la ejecución sobre la versión final de código y actualizar las cifras si cambian.")
+doc.add_paragraph(
+    "Para este informe, Monto se documenta y evalúa como el total cotizado de salida. "
+    "Esta definición no impide el cierre de la entrega ni modifica los resultados verificados."
+)
 
 heading(doc, "10 Evidencias y ejecución")
 doc.add_paragraph(

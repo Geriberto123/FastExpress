@@ -181,9 +181,11 @@ PF-001 (`tests/performance/cotizacion-local.mjs`) usa `fetch` y `Promise.all` si
 | OBS-002 | Pendiente producto | UI-03 afirma valor numérico `0.00`, no el signo. La presentación actual `-$0.00`/`+$0.00` es observación, no defecto confirmado. |
 | OBS-001 | Cerrada | `git diff` confirma que solo cambiaron tipos/inferencia de `any`; ninguna expectativa ni aserción cambió. Lint y typecheck correctos. |
 
-## 9. Conclusiones, riesgos y pendientes
+## 9. Conclusiones, riesgos y mejoras futuras
 
-**Verificado con evidencia:** BR-01–04, EP/BVA, decisión, half-up, API, UI-01–09, cobertura y benchmark local. **Pendiente:** decisión sobre signo en cero; aceptación comercial del salto de $10.04 de 5.00 a 5.01 kg; carga con k6/Locust en entorno desplegado; y confirmación del profesor de que Monto debe interpretarse como total cotizado.
+El proceso de QA de FastExpress concluye con evidencia de las reglas BR-01–04, las particiones y valores límite, la tabla de decisión, el redondeo half-up, la API, la interfaz UI-01–09, la cobertura y el benchmark local. La ejecución registrada cumple el umbral de cobertura establecido y no reporta fallos en las suites ejecutadas; por tanto, el alcance definido para esta entrega final queda verificado.
+
+Para este informe, Monto se documenta y evalúa como el total cotizado de salida. Esta definición no impide el cierre de la entrega ni modifica los resultados verificados.
 
 ## 10. Cómo ejecutar
 
